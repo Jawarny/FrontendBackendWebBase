@@ -1,16 +1,16 @@
 // users-controller.js
 
-const uuid = require('uuid'); // Assurez-vous d'avoir la bibliothèque 'uuid'.
+const uuid = require("uuid"); // Assurez-vous d'avoir la bibliothèque 'uuid'.
 
 let DUMMY_USERS = [
   // Ceci est un tableau d'essai pour simuler une base de données d'utilisateurs
   {
-    id: 'u1',
-    name: 'Utilisateur Test',
-    email: 'test@example.com',
-    password: 'testers',
-    image: 'path/to/image.jpg',
-    role: 'normal',
+    id: "u1",
+    name: "Utilisateur Test",
+    email: "test@example.com",
+    password: "testers",
+    image: "path/to/image.jpg",
+    role: "normal",
   },
 ];
 
@@ -22,7 +22,7 @@ const getUserById = (req, res, next) => {
   const userId = req.params.uid;
   const user = DUMMY_USERS.find((u) => u.id === userId);
   if (!user) {
-    res.status(404).json({ message: 'Utilisateur non trouvé.' });
+    res.status(404).json({ message: "Utilisateur non trouvé." });
   } else {
     res.json({ user });
   }
@@ -32,7 +32,7 @@ const registerUser = (req, res, next) => {
   const { name, email, password, image, role } = req.body;
   const hasUser = DUMMY_USERS.find((u) => u.email === email);
   if (hasUser) {
-    res.status(422).json({ message: 'Cet email est déjà utilisé.' });
+    res.status(422).json({ message: "Cet email est déjà utilisé." });
     return;
   }
   const createdUser = {
@@ -55,9 +55,26 @@ const login = (req, res, next) => {
   if (!identifiedUser) {
     res
       .status(401)
-      .json({ message: 'Identification échouée, vérifiez vos identifiants.' });
+      .json({ message: "Identification échouée, vérifiez vos identifiants." });
   } else {
-    res.json({ message: 'Connexion réussie.' });
+    res.json({ message: "Connexion réussie." });
+    let token;
+    try {
+      token = jwt.sign(
+        { userId: identifiedUser.id, email: createdUser.email },
+        "cleSuperSecrete!",
+        { expiresIn: "1h" }
+      );
+    } catch (err) {
+      const error = new HttpError(
+        "Signing up failed, please try again later.",
+        500
+      );
+      return next(error);
+    }
+    res
+      .status(201)
+      .json({ userId: createdUser.id, email: createdUser.email, token: token });
   }
 };
 
