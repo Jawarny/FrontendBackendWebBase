@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Signup() {
   const [passwordAreNotEqual, setPasswordAreNotEqual] = useState(false);
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     const fd = new FormData(event.target);
     const data = Object.fromEntries(fd.entries());
@@ -12,18 +12,7 @@ export default function Signup() {
       setPasswordAreNotEqual(true);
       return;
     }
-
-    try {
-      const response = await fetch("http://localhost:5000/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", //pour que le bodyParser sache comment faire le parse
-        },
-        body: JSON.stringify(data),
-      });
-    } catch (err) {
-      console.error(err);
-    }
+    console.log(data);
     event.target.reset();
   }
 
@@ -62,12 +51,12 @@ export default function Signup() {
       <div className="control-row">
         <div className="control">
           <label htmlFor="first-name">First Name</label>
-          <input type="text" id="first-name" name="firstName" />
+          <input type="text" id="first-name" name="first-name" />
         </div>
 
         <div className="control">
           <label htmlFor="last-name">Last Name</label>
-          <input type="text" id="last-name" name="lastName" />
+          <input type="text" id="last-name" name="last-name" />
         </div>
       </div>
 
