@@ -23,7 +23,7 @@ export default function Login() {
       email: "",
       password: "",
     });
-    auth.login();
+    auth.login(responseData.userId, responseData.token);
   };
   return (
     <form onSubmit={authSubmitHandler}>

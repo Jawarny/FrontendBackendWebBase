@@ -14,6 +14,7 @@ export default function Signup() {
     }
     console.log(data);
     event.target.reset();
+    auth.login(responseData.userId, responseData.token);
   }
 
   return (
